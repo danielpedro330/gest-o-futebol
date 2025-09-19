@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id String @id @default(cuid())
+  name String
+  logo String // Deve ser posto a URL da imagem
+  email String @unique
+  password String
+  rank String @default("C")
+
+  players Player[]
+  homeGames Match[] @relation("HomeTeam")
+  awayGames Match[] @relation("AwayTeam")
+
+  createdAt DateTime @default(now())
+  InternalMatch InternalMatch[]
+
+  @@map("Times")
+}
+
+model Player {
+  id String @id @default(cuid())
+  name String
+  position String?
+  shirtNumber Int
+  teamId String
+  internalMatch InternalMatch[]
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("Players")
+}
+
+model Match {
+  id String @id @default(cuid())
+  data DateTime
+  homeTeamId String
+  awayTeamId String
+  scoreHome Int?
+  scoreAway Int?
+  confirmed Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  homeTime Team @relation("HomeTeam", fields: [homeTeamId], references: [id])
+
+  awayTeam Team @relation("AwayTeam", fields: [awayTeamId], references: [id])
+
+  @@map("Matches")
+}
+
+model InternalMatch {
+  id String @id @default(cuid())
+  date DateTime
+  teamid String
+  players Player[]
+  score Int?
+  createdAt DateTime @default(now())
+
+  team Team @relation(fields: [teamid], references: [id])
+
+  @@map("InternalMathes")
+}
