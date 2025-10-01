@@ -6,11 +6,11 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  // output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -19,7 +19,7 @@ model Team {
   name String
   logo String // Deve ser posto a URL da imagem
   email String @unique
-  password String
+  password_hash String
   rank String @default("C")
 
   players Player[]
@@ -29,7 +29,7 @@ model Team {
   createdAt DateTime @default(now())
   InternalMatch InternalMatch[]
 
-  @@map("Times")
+  @@map("Teams")
 }
 
 model Player {
