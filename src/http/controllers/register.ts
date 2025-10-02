@@ -1,7 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import {hash } from "bcrypt";
-import { prisma } from "../../lib/prisma.js";
+import { registerUseCase } from "../../use-cases/register.js";
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
     const teamShemma = z.object({
@@ -14,27 +13,17 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
     const { name, logo, email, password, rank } = teamShemma.parse(request.body)
 
-    const password_hash = await hash(password, 6)
-
-    const teamWithSameEmail = await prisma.team.findUnique({
-        where: {
-            email,
-        }
-    })
-
-    if(teamWithSameEmail) {
-        return reply.status(409).send()
-    }
-
-    await prisma.team.create({
-        data: {
+    try {
+        await registerUseCase({
             name,
             email,
             logo,
-            password_hash,
+            password,
             rank,
-        }
-    })
+        })
+    } catch(err) {
+        return reply.status(409).send()
+    }
 
     return reply.status(201).send()
 }
