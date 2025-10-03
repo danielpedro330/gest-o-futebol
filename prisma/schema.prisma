@@ -50,6 +50,7 @@ model Player {
 model Match {
   id String @id @default(cuid())
   data DateTime
+  local String
   homeTeamId String
   awayTeamId String
   scoreHome Int?
