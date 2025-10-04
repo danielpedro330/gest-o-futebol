@@ -10,6 +10,6 @@ export interface IcreateTeamResponse{
     team: string;
 }
 
-export interface IcreateUser{
+export interface IcreateTeam{
     execute(team:IcreateTeamRequest):Promise<IcreateTeamResponse>;
 }
