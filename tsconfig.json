@@ -2,6 +2,8 @@
   "compilerOptions": {
     "module": "ESNext",
     "target": "es2020",
+    "outDir": "./dist", 
+    "rootDir": "." ,  
     "types": ["jest", "node"],
     "paths": {
       "@/*": ["./src/*"]
@@ -19,5 +21,9 @@
     "moduleDetection": "force",
     "moduleResolution": "bundler",
     "skipLibCheck": true
-  }
+  },
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
 }

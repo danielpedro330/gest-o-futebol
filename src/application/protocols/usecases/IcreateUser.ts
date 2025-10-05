@@ -1,10 +1,12 @@
+import type { User } from "@/domain/Entites/User";
+
 export interface IcreateUserRequest{
     name:       string;
     email:      string;
     password:   string;
 }
 export interface IcreateUserResponse{
-    token: string;
+    user:User
 }
 
 export interface IcreateUser{

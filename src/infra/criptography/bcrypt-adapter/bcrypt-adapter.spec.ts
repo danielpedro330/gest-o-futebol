@@ -7,6 +7,7 @@ vi.mock('bcrypt', () => ({
     return await new Promise(resolve => { resolve('hash') })
   },
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async compare (value: string, hashedValue: string): Promise<boolean> {
     return await new Promise(resolve => { resolve(true) })
   }
@@ -33,6 +34,7 @@ describe('Bcrypt Adapter', () => {
 
   test('should throws if bcrypt throws', async () => {
     const sut = makeSut()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   vi.spyOn<any, string>(bcrypt, 'hash').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const promise = sut.Hash('any_value')
     await expect(promise).rejects.toThrow()
@@ -60,6 +62,7 @@ describe('Bcrypt Adapter', () => {
 
   test('should throws if bcrypt compare throws', async () => {
     const sut = makeSut()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   vi.spyOn<any, string>(bcrypt, 'compare').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const promise = sut.Compare('any_value', 'hashedValue')
     await expect(promise).rejects.toThrow()

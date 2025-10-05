@@ -1,8 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// ===================
+// Prisma Schema para Gestão de Partidas de Futebol
+// ===================
 
 generator client {
   provider = "prisma-client-js"
@@ -14,66 +13,148 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Team {
-  id String @id @default(cuid())
-  name String
-  logo String // Deve ser posto a URL da imagem
-  email String @unique
-  password String
-  rank String @default("C")
+// Usuários do sistema (admin, técnicos, etc)
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  status    String   // ativo, inativo, etc
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  players Player[]
+  // Relacionamento futuro: pode ser dono de times, etc
+  // teams Team[]
+
+  @@map("users")
+}
+
+// Times de futebol
+model Team {
+  // Pontuação do time para ranking (atualize via lógica de negócio)
+  points    Int      @default(0)
+  id        String   @id @default(cuid())
+  name      String
+  logo      String   // URL da imagem
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Jogadores do time
+  players   Player[]
+
+  // Partidas em que o time é mandante ou visitante
   homeGames Match[] @relation("HomeTeam")
   awayGames Match[] @relation("AwayTeam")
 
-  createdAt DateTime @default(now())
-  InternalMatch InternalMatch[]
+  // Solicitações de partidas enviadas e recebidas
+  matchRequestsSent     MatchRequest[] @relation("RequestFrom")
+  matchRequestsReceived MatchRequest[] @relation("RequestTo")
 
-  @@map("Times")
+  // Jogos internos (treinos)
+  internalMatches InternalMatch[]
+
+
+  // Relação N:N com MatchPlayer (escalação em partidas)
+  matchPlayers MatchPlayer[]
+
+  @@map("teams")
 }
 
+// Jogadores
 model Player {
-  id String @id @default(cuid())
-  name String
-  position String?
+  id          String   @id @default(cuid())
+  name        String
+  position    String?
   shirtNumber Int
-  teamId String
-  internalMatch InternalMatch[]
+  IsCaptain   Boolean  @default(false)
+  teamId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  team Team @relation(fields: [teamId], references: [id])
+  // Relação com time
+  team        Team     @relation(fields: [teamId], references: [id])
 
-  createdAt DateTime @default(now())
+  // Participação em jogos internos
+  internalMatches InternalMatch[]
 
-  @@map("Players")
+  // Participação em partidas oficiais
+  matchPlayers MatchPlayer[]
+
+  @@map("players")
 }
 
+// Partidas oficiais entre times
 model Match {
-  id String @id @default(cuid())
-  data DateTime
-  local String
-  homeTeamId String
-  awayTeamId String
-  scoreHome Int?
-  scoreAway Int?
-  confirmed Boolean @default(false)
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  date        DateTime
+  location    String
+  homeTeamId  String
+  awayTeamId  String
+  scoreHome   Int?
+  scoreAway   Int?
+  confirmed   Boolean  @default(false)
+  status      String   @default("pending") // pending, accepted, finished, canceled
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  homeTime Team @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  // Relação com times
+  homeTeam    Team     @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam    Team     @relation("AwayTeam", fields: [awayTeamId], references: [id])
 
-  awayTeam Team @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  // Escalação dos jogadores
+  matchPlayers MatchPlayer[]
 
-  @@map("Matches")
+  @@map("matches")
 }
 
-model InternalMatch {
-  id String @id @default(cuid())
-  date DateTime
-  teamid String
-  players Player[]
-  score Int?
+// Relação N:N entre jogadores e partidas (escalação, gols, cartões, etc)
+model MatchPlayer {
+  id        String   @id @default(cuid())
+  matchId   String
+  playerId  String
+  teamId    String
+  goals     Int?    // Gols marcados
+  yellowCards Int?  // Cartões amarelos
+  redCards  Int?    // Cartões vermelhos
+
+  match     Match   @relation(fields: [matchId], references: [id])
+  player    Player  @relation(fields: [playerId], references: [id])
+  team      Team    @relation(fields: [teamId], references: [id])
+
+  @@map("match_players")
+}
+
+// Solicitação de partidas entre times
+model MatchRequest {
+  id        String   @id @default(cuid())
+  fromTeamId String
+  toTeamId   String
+  status    String   @default("pending") // pending, accepted, rejected
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  team Team @relation(fields: [teamid], references: [id])
+  fromTeam  Team     @relation("RequestFrom", fields: [fromTeamId], references: [id])
+  toTeam    Team     @relation("RequestTo", fields: [toTeamId], references: [id])
 
-  @@map("InternalMathes")
+  @@map("match_requests")
+}
+
+// Jogos internos (treinos, amistosos internos)
+model InternalMatch {
+  id        String   @id @default(cuid())
+  date      DateTime
+  teamId    String
+  score     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relação com time
+  team      Team     @relation(fields: [teamId], references: [id])
+
+  // Jogadores participantes
+  players   Player[]
+
+  @@map("internal_matches")
 }

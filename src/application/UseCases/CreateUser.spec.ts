@@ -17,7 +17,7 @@ interface SutTypes{
 
 const makeHasherStub = (): IHasher => {
   class HashStub implements IHasher {
-    async Hash (value: string): Promise<string> {
+    async Hash (): Promise<string> {
       return await new Promise(resolve => { resolve('hashed_password') })
     }
   }
@@ -27,7 +27,7 @@ const makeHasherStub = (): IHasher => {
 
 const makeIEncrypterStub = (): IEncrypter => {
   class Encrypter implements IEncrypter {
-    async encrypt (value: string): Promise<string> {
+    async encrypt (): Promise<string> {
       return await new Promise(resolve => { resolve('Any_Token') })
     }
   }
@@ -55,7 +55,7 @@ describe('Create User Use Case',()=>{
 
     it('should throw if user already exists', async()=>{
        
-        const {sut,UserRepositoryStub}=makeSut()
+        const {sut}=makeSut()
 
         const user=makeUsers({
             name:'any_name', 
@@ -116,7 +116,7 @@ describe('Create User Use Case',()=>{
        
         const {sut,EncrypterStub}=makeSut()
         
-        const encrypterSpy=vi.spyOn(EncrypterStub,'encrypt').mockResolvedValueOnce('any_token')
+       vi.spyOn(EncrypterStub,'encrypt').mockResolvedValueOnce('any_token')
         
         const user=makeUsers();
 

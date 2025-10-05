@@ -1,0 +1,44 @@
+services:
+  pg:
+    image: postgres
+    container_name: pelota-pg
+    environment:
+      - POSTGRES_USER=pelota
+      - POSTGRES_PASSWORD=1qaz2wsx
+      - POSTGRES_DB=pelota_db
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - pelota-network
+
+  api:
+    container_name: pelota-node-api
+    build: .
+    image: pelota-node-api
+    depends_on:
+      - pg
+    command: npm start
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/src/pelota-node-api/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: tsconfig.json
+    volumes:
+      - ./dist/:/usr/src/pelota-node-api/dist/
+      - ./package.json:/usr/src/pelota-node-api/package.json
+    ports:
+      - "3333:3333"
+    networks:
+      - pelota-network
+
+networks:
+  pelota-network:
+    driver: bridge

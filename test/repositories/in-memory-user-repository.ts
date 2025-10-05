@@ -10,6 +10,7 @@ export class InMemoryUserRepository implements IUserRepository{
     async create(user: User) 
     {
         this.item.push(user)
+        return user
     }
 
     async fetchMany(param: PaginationParams)
