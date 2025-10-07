@@ -1,12 +1,15 @@
+import { Team } from "@/domain/Entites/Team";
+
 export interface IcreateTeamRequest{
-    id: string;
     name: string;
     logo: string;
     email: string;
-    password_hash: string;
+    password: string;
     rank: string;
+    country:string;
+    league:string;
 }
-export interface IcreateTeamResponse{
+export interface IcreateTeamResponse {
     team: Team;
 }
 

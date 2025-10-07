@@ -1,4 +1,4 @@
-import type { User } from "@/domain/Entites/User";
+import { User } from "@/domain/Entites/User";
 
 export interface IcreateUserRequest{
     name:       string;
