@@ -7,7 +7,7 @@ export interface IcreateTeamRequest{
     rank: string;
 }
 export interface IcreateTeamResponse{
-    team: string;
+    team: Team;
 }
 
 export interface IcreateTeam{
