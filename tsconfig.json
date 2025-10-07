@@ -1,21 +1,25 @@
 {
   "compilerOptions": {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> feature/created-domain
     // File Layout
     // "rootDir": "./src",
     // "outDir": "./dist",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
-    "types": ["node", "@prisma/client"],
+    "module": "ESNext",
+    "target": "es2020",
+    "types": [],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
     // and npm install -D @types/node
 
     // Other Outputs
+<<<<<<< HEAD
 =======
     "module": "ESNext",
     "target": "es2020",
@@ -26,6 +30,8 @@
       "@/*": ["./src/*"]
     },
 >>>>>>> main
+=======
+>>>>>>> feature/created-domain
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
@@ -37,6 +43,7 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
+<<<<<<< HEAD
 <<<<<<< HEAD
     "moduleResolution": "nodenext",
     "skipLibCheck": false,
@@ -50,4 +57,9 @@
     "**/*.spec.ts"
   ]
 >>>>>>> main
+=======
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+  }
+>>>>>>> feature/created-domain
 }
