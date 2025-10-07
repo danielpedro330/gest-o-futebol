@@ -1,31 +1,62 @@
 {
-  "name": "api-gestao-futebool",
+  "name": "pelota-backend",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "tsx watch src/server.ts",
-    "start": "node build/server.js",
-    "build": "tsup src --format esm --out-dir build"
+    "dev": "tsx watch src/main/server.ts",
+    "start": "node dist/server.js",
+    "build": "tsup src --format esm",
+    "up": "npm run build && docker compose up --watch",
+    "stop": "docker-compose stop",
+    "lint": "eslint src --ext .ts --fix",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@eslint/js": "9.36.0",
+    "@faker-js/faker": "10.0.0",
+    "@types/bcrypt": "6.0.0",
+    "@types/jest": "30.0.0",
+    "@types/jsonwebtoken": "9.0.10",
     "@types/node": "24.3.3",
+    "@vitest/ui": "3.2.4",
+    "c8": "10.1.3",
+    "eslint": "9.36.0",
+    "globals": "16.4.0",
+    "jest": "30.2.0",
+    "jiti": "2.6.1",
     "prisma": "6.16.2",
+<<<<<<< HEAD
     "sqlite": "5.1.1",
+=======
+    "ts-jest": "29.4.4",
+    "tsconfig-paths": "4.2.0",
+>>>>>>> main
     "tsup": "8.5.0",
     "tsx": "4.20.5",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.45.0",
+    "vitest": "3.2.4"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",
+<<<<<<< HEAD
     "@types/bcrypt": "6.0.0",
+=======
+>>>>>>> main
     "bcrypt": "6.0.0",
     "dotenv": "17.2.2",
     "fastify": "5.6.0",
+    "jsonwebtoken": "9.0.2",
     "zod": "4.1.8"
   }
 }
