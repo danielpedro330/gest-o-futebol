@@ -1,5 +1,5 @@
 import type { IEncrypter } from '@/application/protocols/criptography/encrypter'
-import {sign} from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 export class JwtAdapter implements IEncrypter {
   private readonly _secret: string
@@ -8,7 +8,7 @@ export class JwtAdapter implements IEncrypter {
   }
 
   async encrypt (value: string): Promise<string> {
-    const token = sign({ Id: value }, this._secret)
+    const token = jwt.sign({ Id: value }, this._secret)
     return token
   }
 }
