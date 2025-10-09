@@ -1,24 +1,13 @@
 {
   "compilerOptions": {
-    // File Layout  
+    "module": "ESNext",
+    "target": "es2020",
     "outDir": "./dist", 
-    "rootDir": ".",
+    "rootDir": "." ,  
+    "types": ["jest", "node"],
     "paths": {
       "@/*": ["./src/*"]
     },
-
-
-    // Environment Settings
-    // See also https://aka.ms/tsconfig/module
-    "module": "ESNext",
-    "target": "es2020",
-    "types": [],
-    // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
-    // and npm install -D @types/node
-
-    // Other Outputs
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
@@ -31,6 +20,10 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "moduleResolution": "bundler",
-    "skipLibCheck": true,
-  }
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
 }

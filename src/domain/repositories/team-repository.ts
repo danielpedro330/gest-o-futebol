@@ -3,6 +3,7 @@ import type { Team } from "../Entites/Team";
 
 export interface ITeamRepository {
     create(team: Team): Promise<Team>
+    fetchMany( param:PaginationParams):Promise<Team[]>
     findByTeamName(TeamName: string): Promise<Team | undefined>
     findByEmail(Email: string): Promise<Team | undefined>
     findById(Id: string): Promise<Team | undefined>
