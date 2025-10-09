@@ -1,18 +1,16 @@
 import { vi } from 'vitest';
 import type { IcreateUser } from "../protocols/usecases/IcreateUser";
-import type { IUserRepository } from "@/domain/repositories/user-repository";
+import type { IUserRepository } from "../../domain/repositories/user-repository";
 import type { IHasher } from "../protocols/criptography/hash";
 import { InMemoryUserRepository } from "../../../test/repositories/in-memory-user-repository";
-import type { IEncrypter } from "../protocols/criptography/encrypter";
 import { CreateUser } from "./CreateUser";
-import { UniqueEntityID } from "@/domain/Entites/unique-entity-id";
 import { makeUsers } from "../../../test/factories/make-user";
+import { EmailInUseError } from '../errors/email-alredy-exists';
 
 interface SutTypes{
     sut: IcreateUser,
     UserRepositoryStub: IUserRepository,
-    HasherStub: IHasher,
-    EncrypterStub: IEncrypter,
+    HasherStub: IHasher
 }
 
 const makeHasherStub = (): IHasher => {
@@ -25,7 +23,7 @@ const makeHasherStub = (): IHasher => {
   return new HashStub()
 }
 
-const makeIEncrypterStub = (): IEncrypter => {
+/*const makeIEncrypterStub = (): IEncrypter => {
   class Encrypter implements IEncrypter {
     async encrypt (): Promise<string> {
       return await new Promise(resolve => { resolve('Any_Token') })
@@ -33,21 +31,20 @@ const makeIEncrypterStub = (): IEncrypter => {
   }
 
   return new Encrypter()
-}
+}*/
 
 
 
 function makeSut(): SutTypes{
     const UserRepositoryStub=new InMemoryUserRepository();
     const HasherStub=makeHasherStub();
-    const EncrypterStub=makeIEncrypterStub();
-    const sut=  new CreateUser(UserRepositoryStub,HasherStub,EncrypterStub);
+    //const EncrypterStub=makeIEncrypterStub();
+    const sut=  new CreateUser(UserRepositoryStub,HasherStub);
 
     return {
         sut,
         UserRepositoryStub,
-        HasherStub,
-        EncrypterStub
+        HasherStub
     }
 }
 
@@ -75,7 +72,7 @@ describe('Create User Use Case',()=>{
             password:user.password
         });
 
-        await expect(promise).rejects.toThrow(new Error('User already exists'))
+        await expect(promise).rejects.toThrow(new EmailInUseError())
     })
 
     it('should call Hasher with correct password', async()=>{
@@ -95,37 +92,18 @@ describe('Create User Use Case',()=>{
         expect(hashSpy).toHaveBeenCalledWith('any_password')
     })
 
-    it.skip('should call Encrypter with correct id', async()=>{
-       
-        const {sut,EncrypterStub}=makeSut()
-        
-        const encrypterSpy=vi.spyOn(EncrypterStub,'encrypt')
-        
-        const user=makeUsers({},new UniqueEntityID('any_id'));
-        
-        await sut.execute({
-            name:user.name,
-            email:user.email,
-            password:user.password
-        });
-
-        expect(encrypterSpy).toHaveBeenCalledWith('any_id')
+    it('shold be able create a new user',async ()=>{
+       const {sut}=makeSut()
+      const user=makeUsers({
+        name:'any_name',
+        email:'any_email'
+      });
+      const result=await sut.execute({
+        email:user.email,
+        name:user.name,
+        password:user.password
+      })
+      expect(result.user.email).toBe('any_email')
     })
 
-     it('should return any token when user is created', async()=>{
-       
-        const {sut,EncrypterStub}=makeSut()
-        
-       vi.spyOn(EncrypterStub,'encrypt').mockResolvedValueOnce('any_token')
-        
-        const user=makeUsers();
-
-        const result=await sut.execute({
-            name:user.name,
-            email:user.email,
-            password:user.password
-        });
-
-      expect(result.token).toBe('any_token')
-    })
 })

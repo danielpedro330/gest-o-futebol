@@ -3,6 +3,7 @@ import type { IUserRepository } from "@/domain/repositories/user-repository"
 import type { PaginationParams } from "@/utils/pagination-params"
 
 export class InMemoryUserRepository implements IUserRepository{
+ 
   
 
     public item:User[]=[]
@@ -26,6 +27,10 @@ export class InMemoryUserRepository implements IUserRepository{
 
       async findByEmail(Email: string) {
         return this.item.find(item=>item.email==Email)
+    }
+
+    async findByUserNameOrEmail(data: string) {
+          return this.item.find(item=>item.email==data || item.name==data)
     }
 
 
