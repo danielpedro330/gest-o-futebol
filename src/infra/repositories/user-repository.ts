@@ -29,6 +29,7 @@ export class UserRepository implements IUserRepository{
         return users as User[];
     }
 
+
     async findByUserName(userName: string): Promise<User | undefined> {
         const user = await prisma.user.findFirst({ where: { name: userName } });
         return user as User | undefined;
@@ -37,6 +38,14 @@ export class UserRepository implements IUserRepository{
     async findByEmail(email: string): Promise<User | undefined> {
         const user = await prisma.user.findUnique({ where: { email } });
         return user as User | undefined;
+    }
+
+    async findByUserNameOrEmail(data: string): Promise<User | undefined> {
+        return await prisma.user.findFirst({
+            where: {
+                OR: [ { name: data }, { email: data } ]
+            }
+        }) as User | undefined;
     }
 
     async findById(id: string): Promise<User | undefined> {

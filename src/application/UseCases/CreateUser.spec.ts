@@ -90,9 +90,9 @@ describe('Create User Use Case',()=>{
         });
 
         expect(hashSpy).toHaveBeenCalledWith('any_password')
-    })
+    });
 
-    it('shold be able create a new user',async ()=>{
+    it('should be able create a new user',async ()=>{
        const {sut}=makeSut()
       const user=makeUsers({
         name:'any_name',
