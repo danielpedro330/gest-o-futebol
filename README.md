@@ -2,7 +2,7 @@
 
 ## ✅ RFs – Requisitos Funcionais
 
- - [ ] Deve ser possível cadastrar um team;
+ - [x] Deve ser possível cadastrar um team;
  - [ ] Deve ser possível autenticar um team no sistema;
  - [ ] Deve ser possível cadastrar e gerenciar os jogadores de um team;
  - [ ] Deve ser possível solicitar uma partida contra outro team;
@@ -14,7 +14,7 @@
 ## 📌 RN – Regras de Negócio
 
  - [ ] Um team de rank inferior não pode solicitar partida contra um team de rank superior;
- - [ ] Um team não pode se cadastrar com um email duplicado;
+ - [x] Um team não pode se cadastrar com um email duplicado;
  - [ ] Um team não pode agendar duas partidas no mesmo dia;
  - [ ] Um team de rank superior pode solicitar partida contra um team de rank inferior;
  - [ ] Um team sobe de nível quando alcançar 10 jogos consecutivos com pelo menos 6 vitórias;
